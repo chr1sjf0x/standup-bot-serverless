@@ -52,11 +52,11 @@ const init = async () => {
     app.command("/standup", async ({ack, body, client, logger}) => {
         await ack();
 
-        let args = body.text;
+        const args = body.text;
 
         if (args == "help") {
-            let message = "How to use /standup"
-            let attachments = [];
+            const message = "How to use /standup"
+            const attachments = [];
             attachments.push({
                 "text": "`/standup` and enter your status in the modal"
                     + "\n`/standup [parking-lot | parking_lot | parkinglot | -p]` to display items in the parking lot (visible only to you)"
@@ -87,7 +87,7 @@ const init = async () => {
         }
         else {
             try {
-                let payload = await slackBot.buildNewMessageModalView(body, client);
+                const payload = await slackBot.buildNewMessageModalView(body, client);
                 const result = await client.views.open(
                     payload
                 );
@@ -132,13 +132,13 @@ const init = async () => {
         await ack();
         try {
             // When a messageId is present we are editing a message
-            const isEdit: boolean = !!viewInput.pm.messageId;
+            const isEdit = !!viewInput.pm.messageId;
 
             // If the message type is scheduled but there is no scheduleDateTime, this message
             // must be deleted and posted to channel
             if(viewInput.pm.messageType === "scheduled" && isEdit) {
                 // If this is an edit schedule message, delete the existing one based on its messageDate
-                 let command = new ChangeMessageCommand(viewInput.pm.messageId!,
+                 const command = new ChangeMessageCommand(viewInput.pm.messageId!,
                         viewInput.pm.channelId!,
                         viewInput.pm.messageDate!,
                         viewInput.pm.userId!);
@@ -149,13 +149,13 @@ const init = async () => {
             // If we have a scheduleDateTime, schedule a new message
             if(viewInput.scheduleDateTime) {
                 // Schedule a new message
-                let scheduleStr = formatDateToPrintable(viewInput.scheduleDateTime, viewInput.timezone!);
+                const scheduleStr = formatDateToPrintable(viewInput.scheduleDateTime, viewInput.timezone!);
 
                 const chatMessageArgs = await slackBot.createChatMessage(viewInput, client);
                 logger.info("Scheduling message for " + scheduleStr + " with input " + viewInput.scheduleDateTime);
                 // Unix timestamp is seconds since epoch
                 chatMessageArgs.post_at = viewInput.scheduleDateTime / 1000;
-                let scheduleResponse = await client.chat.scheduleMessage(chatMessageArgs as ChatScheduleMessageArguments);
+                const scheduleResponse = await client.chat.scheduleMessage(chatMessageArgs as ChatScheduleMessageArguments);
                 try {
                     const saveDate = new Date(viewInput.scheduleDateTime);
                     viewInput.pm.messageId = scheduleResponse.scheduled_message_id!;
@@ -169,13 +169,13 @@ const init = async () => {
                 logger.info(`Message id ${scheduleResponse.scheduled_message_id} scheduled to send ${formatDateToPrintable(date.getTime(), viewInput.timezone)} for channel ${scheduleResponse.channel} `);
 
                 // Use the response to create a dialog
-                let msgId = scheduleResponse.scheduled_message_id!;
-                let command = new ChangeMessageCommand(msgId,
+                const msgId = scheduleResponse.scheduled_message_id!;
+                const command = new ChangeMessageCommand(msgId,
                     viewInput.pm.channelId!,
                     viewInput.scheduleDateTime,
                     viewInput.pm.userId!)
                 command.messageId = msgId;
-                let confMessage = slackBot.buildScheduledMessageDialog(command,
+                const confMessage = slackBot.buildScheduledMessageDialog(command,
                     viewInput.timezone!,
                     chatMessageArgs as ChatScheduleMessageArguments);
 
@@ -224,7 +224,7 @@ const init = async () => {
             }
         } catch (error) {
             logger.error(error);
-            let msg = (error as Error).message;
+            const msg = (error as Error).message;
             const viewArgs = slackBot.buildErrorMessage(viewInput.pm.channelId!, viewInput.pm.userId!, msg);
             try {
                 logger.info(viewArgs);

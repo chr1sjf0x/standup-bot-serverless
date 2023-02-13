@@ -18,7 +18,7 @@ Or invite the bot to the channel with `@Standup`.
 ## Usage - Slack
 ```sh
 /standup help
-/standup [parking-lot | parking_lot | parkinglot | -p]- display ephemeral parking lot items
+/standup [parking-lot | parking_lot | parkinglot | -p] - display ephemeral parking lot items
 /standup post [parking-lot | parking_lot | parkinglot | -p] - post parking lot items to chat
 ```
 
@@ -66,7 +66,7 @@ In the app's _Basic Settings_ copy the value for _Signing Secret_:
 ## Local Development
 Testing locally requires Docker, and setting the following environment variables in a `.env` file. These are the same values found in the **Secrets** section of this document.
 
-* `SLACK_STANDUP_TOKEN`
+* `SLACK_STANDUP_BOT_TOKEN`
 * `SLACK_STANDUP_SIGNING_SECRET`
 
 Deploy to Docker with the following command:
@@ -118,6 +118,7 @@ The app needs permissions to interact with the Slack workspace. Enable OAuth sco
 * `chat:write`
 * `chat:write.customize`
 * `commands`
+* `groups:read`
 * `users.profile:read`
 * `users:read`
 
